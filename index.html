@@ -1,124 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chatbot Ollama</title>
 
+<link rel="icon" href="data:,">
+
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        font-family:Arial, Helvetica, sans-serif;
-    }
 
-    body{
-        background:#0f172a;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        color:white;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
 
-    .chat-container{
-        width:95%;
-        max-width:900px;
-        height:90vh;
-        background:#111827;
-        border-radius:20px;
-        overflow:hidden;
-        display:flex;
-        flex-direction:column;
-        box-shadow:0 0 30px rgba(0,0,0,0.5);
-    }
+body{
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
+}
 
-    .header{
-        background:#1e293b;
-        padding:20px;
-        text-align:center;
-        font-size:24px;
-        font-weight:bold;
-        border-bottom:1px solid #334155;
-    }
+.chat-container{
+    width:95%;
+    max-width:900px;
+    height:90vh;
+    background:#111827;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
 
-    .messages{
-        flex:1;
-        padding:20px;
-        overflow-y:auto;
-        display:flex;
-        flex-direction:column;
-        gap:15px;
-    }
+.header{
+    background:#1e293b;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    border-bottom:1px solid #334155;
+}
 
-    .message{
-        padding:15px;
-        border-radius:15px;
-        max-width:80%;
-        line-height:1.5;
-        animation:fade .2s ease;
-    }
+.messages{
+    flex:1;
+    padding:20px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
 
-    .user{
-        background:#2563eb;
-        align-self:flex-end;
-    }
+.message{
+    padding:15px;
+    border-radius:15px;
+    max-width:80%;
+    line-height:1.5;
+    animation:fade .2s ease;
+    word-wrap:break-word;
+}
 
-    .bot{
-        background:#1f2937;
-        align-self:flex-start;
-    }
+.user{
+    background:#2563eb;
+    align-self:flex-end;
+}
 
-    .input-area{
-        display:flex;
-        padding:15px;
-        background:#1e293b;
-        border-top:1px solid #334155;
-    }
+.bot{
+    background:#1f2937;
+    align-self:flex-start;
+}
 
-    input{
-        flex:1;
-        padding:15px;
-        border:none;
-        outline:none;
-        border-radius:12px;
-        background:#0f172a;
-        color:white;
-        font-size:16px;
-    }
+.typing{
+    opacity:0.7;
+    font-style:italic;
+}
 
-    button{
-        margin-left:10px;
-        padding:15px 25px;
-        border:none;
-        border-radius:12px;
-        background:#2563eb;
-        color:white;
-        font-weight:bold;
-        cursor:pointer;
-        transition:0.2s;
-    }
+.input-area{
+    display:flex;
+    padding:15px;
+    background:#1e293b;
+    border-top:1px solid #334155;
+}
 
-    button:hover{
-        background:#1d4ed8;
-    }
+input{
+    flex:1;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:#0f172a;
+    color:white;
+    font-size:16px;
+}
 
-    .typing{
-        opacity:0.7;
-        font-style:italic;
-    }
+button{
+    margin-left:10px;
+    padding:15px 25px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
 
-    @keyframes fade{
-        from{
-            opacity:0;
-            transform:translateY(10px);
-        }
-        to{
-            opacity:1;
-            transform:translateY(0);
-        }
+button:hover{
+    background:#1d4ed8;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(10px);
     }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
 
 </style>
 </head>
@@ -127,50 +131,59 @@
 <div class="chat-container">
 
     <div class="header">
-        Chatbot IA - Ollama
+        🤖 Chatbot Ollama IA
     </div>
 
     <div class="messages" id="messages">
+
         <div class="message bot">
             Olá 👋<br>
-            Como posso ajudar você hoje?
+            Faça uma pergunta.
         </div>
+
     </div>
 
     <div class="input-area">
+
         <input 
-            type="text" 
-            id="userInput" 
-            placeholder="Digite sua pergunta..."
-        />
-        <button onclick="sendMessage()">Enviar</button>
+            type="text"
+            id="userInput"
+            placeholder="Digite sua mensagem..."
+        >
+
+        <button onclick="sendMessage()">
+            Enviar
+        </button>
+
     </div>
 
 </div>
 
 <script>
 
-const API_KEY = "70aeb09bca644508b23ada1e2731c7bd.ZrODzDtBctmDppWRG_PPJs4w";
-
-// URL da API
-const API_URL = "https://api.ollama.com/v1/chat/completions";
-
 const messagesDiv = document.getElementById("messages");
 const userInput = document.getElementById("userInput");
 
 userInput.addEventListener("keypress", function(e){
+
     if(e.key === "Enter"){
         sendMessage();
     }
+
 });
 
 function addMessage(text, sender){
+
     const div = document.createElement("div");
-    div.classList.add("message");
-    div.classList.add(sender);
+
+    div.className = "message " + sender;
+
     div.innerHTML = text.replace(/\n/g, "<br>");
+
     messagesDiv.appendChild(div);
+
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
     return div;
 }
 
@@ -184,50 +197,61 @@ async function sendMessage(){
 
     userInput.value = "";
 
-    const typing = addMessage("Digitando...", "bot typing");
+    const typing = addMessage(
+        "Digitando...",
+        "bot typing"
+    );
 
     try{
 
-        const response = await fetch(API_URL,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                "Authorization":"Bearer " + API_KEY
-            },
-            body:JSON.stringify({
-                model:"llama3",
-                messages:[
-                    {
-                        role:"user",
-                        content:text
-                    }
-                ]
-            })
-        });
+        // API LOCAL DO OLLAMA
+        const response = await fetch(
+            "http://localhost:11434/api/chat",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    model:"llama3",
+                    messages:[
+                        {
+                            role:"user",
+                            content:text
+                        }
+                    ],
+                    stream:false
+                })
+            }
+        );
 
         const data = await response.json();
 
         typing.remove();
 
-        let reply = "Erro ao obter resposta.";
+        let resposta = "Sem resposta.";
 
-        if(data.choices && data.choices.length > 0){
-            reply = data.choices[0].message.content;
+        if(data.message && data.message.content){
+            resposta = data.message.content;
         }
 
-        addMessage(reply, "bot");
+        addMessage(resposta, "bot");
 
     }catch(error){
 
         typing.remove();
 
         addMessage(
-            "Erro na conexão com a API.<br><br>" + error.message,
+            "❌ Erro ao conectar ao Ollama.<br><br>" +
+            "Verifique se o Ollama está aberto.<br><br>" +
+            error.message,
             "bot"
         );
 
         console.error(error);
+
     }
+
 }
 
 </script>
